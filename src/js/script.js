@@ -88,7 +88,8 @@
       thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form); // .product__order
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs); // input, select
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); // [href="#add-to-cart"]
-      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem); // .product__total-price .price'
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem); // .product__total-price .price
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper); // .product__images
     }
 
     initAccordion(){
@@ -168,8 +169,17 @@
 
           // update price, check if optionId is selected
           if (formData[paramId]) {
+
+            const imageSelector = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+            //console.log(imageSelector);
+
             // selected
             if (formData[paramId].includes(optionId)) {
+              // poza pizza i salatka sa tez obrazki innych dan, ktorych klasy nie pasuja do selektora i zwracaja 'null', dlatego chce wybrac tylko te, ktore pasuja
+              if (imageSelector) {
+                imageSelector.classList.add(classNames.menuProduct.imageVisible); // active
+              }
+
               if (!option.default) {
                 console.log(optionId, 'selected, not default');
                 price += option.price;
@@ -178,6 +188,10 @@
               }
             // not selected
             } else {
+              if (imageSelector) {
+                imageSelector.classList.remove(classNames.menuProduct.imageVisible); // active
+              }
+
               if (option.default) {
                 console.log(optionId, 'not selected, default');
                 price -= option.price;

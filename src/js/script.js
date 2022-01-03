@@ -60,9 +60,12 @@
       thisProduct.data = data;
 
       thisProduct.renderInMenu();
+      thisProduct.getElements();
       thisProduct.initAccordion();
+      thisProduct.initOrderForm();
+      thisProduct.processOrder();
 
-      console.log('new Product:', thisProduct);
+      //console.log('new Product:', thisProduct);
     }
 
     renderInMenu(){
@@ -78,18 +81,27 @@
       menuContainer.appendChild(thisProduct.element);
     }
 
+    getElements(){
+      const thisProduct = this;
+
+      thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable); // .product__header
+      thisProduct.form = thisProduct.element.querySelector(select.menuProduct.form); // .product__order
+      thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs); // input, select
+      thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton); // [href="#add-to-cart"]
+      thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem); // .product__total-price .price'
+    }
+
     initAccordion(){
       const thisProduct = this;
       const givenProduct = thisProduct.element; // watched/clicked product (each separate product)
 
-      console.log('thisProduct.element', givenProduct);
+      // console.log('thisProduct.element', givenProduct);
 
       /* find the clickable trigger (the element that should react to clicking) */
-      const clickableTrigger = givenProduct.querySelector(select.menuProduct.clickable); // .product__header of a given (each) product
-      console.log('clickableTrigger: ', clickableTrigger);
+      // console.log('clickableTrigger: ', thisProduct.accordionTrigger);
 
       /* START: add event listener to clickable trigger on event click */
-      clickableTrigger.addEventListener('click', function(event) {
+      thisProduct.accordionTrigger.addEventListener('click', function(event) {
 
         /* prevent default action for event */
         event.preventDefault();
@@ -106,6 +118,78 @@
         /* toggle active class on thisProduct.element */
         givenProduct.classList.toggle('active');
       });
+    }
+
+    initOrderForm(){
+      const thisProduct = this;
+      //console.log('initOrderForm');
+
+      thisProduct.form.addEventListener('submit', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+
+      for(let input of thisProduct.formInputs){
+        input.addEventListener('change', function(){
+          thisProduct.processOrder();
+        });
+      }
+
+      thisProduct.cartButton.addEventListener('click', function(event){
+        event.preventDefault();
+        thisProduct.processOrder();
+      });
+    }
+
+    processOrder(){
+      const thisProduct = this;
+      console.log('processOrder');
+
+      // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      console.log('formData', formData);
+
+      // set price to default price
+      let price = thisProduct.data.price;
+      console.log('data.params: ', thisProduct.data.params);
+      // for every category (param)...
+      for(let paramId in thisProduct.data.params) {
+        // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
+        const param = thisProduct.data.params[paramId];
+        //console.log('paramId: ', paramId);
+        //console.log('param', param);
+
+        // for every option in this category
+        for(let optionId in param.options) {
+          // determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true }
+          const option = param.options[optionId];
+          //console.log('optionId: ', optionId); // params.coffe.options (NAME) e.g. latte, cappuccino, espresso
+          //console.log('option: ', option); // params.coffe.options (OBJECT) e.g. latte {label: , price: , default: }
+
+          // update price, check if optionId is selected
+          if (formData[paramId]) {
+            // selected
+            if (formData[paramId].includes(optionId)) {
+              if (!option.default) {
+                console.log(optionId, 'selected, not default');
+                price += option.price;
+              } else {
+                console.log(optionId, 'selected, default');
+              }
+            // not selected
+            } else {
+              if (option.default) {
+                console.log(optionId, 'not selected, default');
+                price -= option.price;
+              } else {
+                console.log(optionId, 'not selected, not default');
+              }
+            }
+          }
+        }
+      }
+      // update calculated price in the HTML
+      thisProduct.priceElem.innerHTML = price;
     }
 
   }

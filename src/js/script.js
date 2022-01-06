@@ -78,7 +78,8 @@
     cartProduct: Handlebars.compile(document.querySelector(select.templateOf.cartProduct).innerHTML),
   };
 
-  class Product{
+
+  class Product {
     constructor(id, data) {
       const thisProduct = this;
 
@@ -95,7 +96,7 @@
       //console.log('new Product:', thisProduct);
     }
 
-    renderInMenu(){
+    renderInMenu() {
       const thisProduct = this;
 
       /* generate HTML based on template */
@@ -108,7 +109,7 @@
       menuContainer.appendChild(thisProduct.element);
     }
 
-    getElements(){
+    getElements() {
       const thisProduct = this;
 
       thisProduct.accordionTrigger = thisProduct.element.querySelector(select.menuProduct.clickable); // .product__header
@@ -149,28 +150,28 @@
       });
     }
 
-    initOrderForm(){
+    initOrderForm() {
       const thisProduct = this;
       //console.log('initOrderForm');
 
-      thisProduct.form.addEventListener('submit', function(event){
+      thisProduct.form.addEventListener('submit', function(event) {
         event.preventDefault();
         thisProduct.processOrder();
       });
 
-      for(let input of thisProduct.formInputs){
+      for(let input of thisProduct.formInputs) {
         input.addEventListener('change', function(){
           thisProduct.processOrder();
         });
       }
 
-      thisProduct.cartButton.addEventListener('click', function(event){
+      thisProduct.cartButton.addEventListener('click', function(event) {
         event.preventDefault();
         thisProduct.processOrder();
       });
     }
 
-    processOrder(){
+    processOrder() {
       const thisProduct = this;
       // console.log('processOrder');
 
@@ -235,7 +236,7 @@
       thisProduct.priceElem.innerHTML = price;
     }
 
-    initAmountWidget(){
+    initAmountWidget() {
       const thisProduct = this;
 
       thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
@@ -247,7 +248,7 @@
   }
 
 
-  class AmountWidget{
+  class AmountWidget {
     constructor(element) {
       const thisWidget = this;
 
@@ -259,7 +260,7 @@
       thisWidget.initActions();
     }
 
-    getElements(element){
+    getElements(element) {
       const thisWidget = this;
 
       thisWidget.element = element;
@@ -268,7 +269,7 @@
       thisWidget.linkIncrease = thisWidget.element.querySelector(select.widgets.amount.linkIncrease);
     }
 
-    setValue(value){
+    setValue(value) {
       const thisWidget = this;
 
       const newValue = parseInt(value);
@@ -281,7 +282,7 @@
       thisWidget.input.value = thisWidget.value;
     }
 
-    initActions(){
+    initActions() {
       const thisWidget = this;
 
       thisWidget.input.addEventListener('change', thisWidget.setValue(settings.amountWidget.defaultValue));
@@ -298,7 +299,7 @@
       });
     }
 
-    announce(){
+    announce() {
       const thisWidget = this;
 
       const event = new Event('updated');
@@ -308,8 +309,41 @@
   }
 
 
+  class Cart {
+    constructor(element) {
+      const thisCart = this;
+
+      thisCart.products = [];
+
+      thisCart.getElements(element);
+      thisCart.initActions();
+
+      console.log('new Cart', thisCart);
+    }
+
+    getElements(element) {
+      const thisCart = this;
+
+      thisCart.dom = {};
+
+      thisCart.dom.wrapper = element;
+      thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
+      console.log('wrapper', element);
+      console.log('trigger', thisCart.dom.toggleTrigger);
+    }
+
+    initActions() {
+      const thisCart = this;
+
+      thisCart.dom.toggleTrigger.addEventListener('click', function(event){
+        event.preventDefault();
+        thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
+      });
+    }
+  }
+
   const app = {
-    initMenu: function(){
+    initMenu: function() {
       const thisApp = this;
       // console.log('thisApp.data:', thisApp.data);
 
@@ -318,13 +352,13 @@
       }
     },
 
-    initData: function(){
+    initData: function() {
       const thisApp = this;
 
       thisApp.data = dataSource;
     },
 
-    init: function(){
+    init: function() {
       const thisApp = this;
       console.log('*** App starting ***');
       console.log('thisApp:', thisApp);
@@ -334,7 +368,15 @@
 
       thisApp.initData();
       thisApp.initMenu();
+      thisApp.initCart();
     },
+
+    initCart: function() {
+      const thisApp = this;
+
+      const cartElem = document.querySelector(select.containerOf.cart);
+      thisApp.cart = new Cart(cartElem);
+    }
   };
 
   app.init();

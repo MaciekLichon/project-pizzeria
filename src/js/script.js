@@ -168,6 +168,7 @@
       thisProduct.cartButton.addEventListener('click', function(event) {
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
 
@@ -177,12 +178,13 @@
 
       // covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']}
       const formData = utils.serializeFormToObject(thisProduct.form);
-      // console.log('formData', formData);
+      //console.log('formData', formData);
 
       // set price to default price
       let price = thisProduct.data.price;
       // console.log('data.params: ', thisProduct.data.params);
       // for every category (param)...
+      console.log(thisProduct.data.params);
       for(let paramId in thisProduct.data.params) {
         // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
         const param = thisProduct.data.params[paramId];
@@ -232,6 +234,7 @@
         }
       }
       // update calculated price in the HTML
+      thisProduct.priceSingle = price;
       price *= thisProduct.amountWidget.value;
       thisProduct.priceElem.innerHTML = price;
     }
@@ -245,6 +248,54 @@
         thisProduct.processOrder();
       });
     }
+
+    addToCart() {
+      const thisProduct = this;
+
+      app.cart.add(thisProduct.prepareCartProduct());
+    }
+
+    prepareCartProduct() {
+      const thisProduct = this;
+
+      const productSummary = {
+        id: thisProduct.id,
+        name: thisProduct.data.name,
+        amount: thisProduct.amountWidget.value,
+        priceSingle: thisProduct.priceSingle,
+        price: thisProduct.priceSingle * thisProduct.amountWidget.value,
+        params: thisProduct.prepareCartProductParams()
+      };
+
+      return productSummary;
+    }
+
+    prepareCartProductParams() {
+      const thisProduct = this;
+
+      const formData = utils.serializeFormToObject(thisProduct.form);
+      const productParams = {};
+
+      for (let paramId in thisProduct.data.params) {
+        const param = thisProduct.data.params[paramId];
+
+        productParams[paramId] = {
+          label: param.label,
+          options: {}
+        };
+
+        for (let optionId in param.options) {
+          const option = param.options[optionId];
+
+          if (formData[paramId] && formData[paramId].includes(optionId)) {
+            productParams[paramId].options[optionId] = option.label;
+          }
+        }
+
+      }
+      return productParams;
+    }
+
   }
 
 
@@ -252,8 +303,8 @@
     constructor(element) {
       const thisWidget = this;
 
-      console.log('AmountWidget: ', thisWidget);
-      console.log('constructor arguments: ', element);
+      //console.log('AmountWidget: ', thisWidget);
+      //console.log('constructor arguments: ', element);
 
       thisWidget.getElements(element);
       thisWidget.setValue(thisWidget.input.value);
@@ -328,17 +379,26 @@
 
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
-      console.log('wrapper', element);
-      console.log('trigger', thisCart.dom.toggleTrigger);
+      thisCart.dom.productList = element.querySelector(select.cart.productList); // .cart__order-summary
     }
 
     initActions() {
       const thisCart = this;
 
-      thisCart.dom.toggleTrigger.addEventListener('click', function(event){
+      thisCart.dom.toggleTrigger.addEventListener('click', function(event) {
         event.preventDefault();
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+    }
+
+    add(menuProduct) {
+      const thisCart = this;
+
+      const generatedHTML = templates.cartProduct(menuProduct);
+      const generatedDOM = utils.createDOMFromHTML(generatedHTML); // stworzenie diva i uzupelnienie go szablonem, dzieki 'return div.firstChild' w HTML pojawi sie sam template
+      thisCart.dom.productList.appendChild(generatedDOM); // appendChild bo mozna dodac kilka rzeczy do koszyka a kazda to osobny li
+
+      console.log('adding product', menuProduct);
     }
   }
 

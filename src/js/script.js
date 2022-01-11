@@ -1,3 +1,4 @@
+
 /* global Handlebars, utils, dataSource */ // eslint-disable-line no-unused-vars
 
 {
@@ -70,6 +71,11 @@
     },
     cart: {
       defaultDeliveryFee: 20,
+    },
+    db: {
+      url: '//localhost:3131',
+      products: 'products',
+      orders: 'orders',
     },
   };
 
@@ -253,6 +259,8 @@
       const thisProduct = this;
 
       app.cart.add(thisProduct.prepareCartProduct());
+
+      console.log('adding', thisProduct.prepareCartProduct());
     }
 
     prepareCartProduct() {
@@ -307,7 +315,7 @@
       //console.log('constructor arguments: ', element);
 
       thisWidget.getElements(element);
-      thisWidget.setValue(thisWidget.input.value);
+      thisWidget.setValue(thisWidget.input.value || settings.amountWidget.defaultValue); // nowe
       thisWidget.initActions();
     }
 
@@ -336,7 +344,9 @@
     initActions() {
       const thisWidget = this;
 
-      thisWidget.input.addEventListener('change', thisWidget.setValue(settings.amountWidget.defaultValue));
+      thisWidget.input.addEventListener('change', function() {
+        thisWidget.setValue(settings.amountWidget.defaultValue);
+      });
       //thisWidget.input.addEventListener('change', thisWidget.setValue(thisWidget.input.value));
 
       thisWidget.linkDecrease.addEventListener('click', function(event) {
@@ -414,7 +424,7 @@
       thisCart.dom.productList.appendChild(generatedDOM); // appendChild bo mozna dodac kilka rzeczy do koszyka a kazda to osobny li
 
       thisCart.products.push(new CartProduct(menuProduct, generatedDOM));
-      console.log('thisCart.products', thisCart.products);
+
       // console.log('adding product', menuProduct);
 
       thisCart.update();
@@ -493,6 +503,7 @@
       thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
       thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
       thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
+      console.log(thisCartProduct.dom.amountWidget);
     }
 
     initAmountWidget() {
@@ -500,11 +511,11 @@
 
       thisCartProduct.amountWidget = new AmountWidget(thisCartProduct.dom.amountWidget);
 
-      thisCartProduct.dom.amountWidget.addEventListener('updated', function(){
+      thisCartProduct.dom.amountWidget.addEventListener('updated', function() {
         thisCartProduct.amount = thisCartProduct.amountWidget.value;
         thisCartProduct.price = thisCartProduct.priceSingle * thisCartProduct.amount;
 
-        thisCartProduct.dom.price.innerHTML = thisCartProduct.price;
+        thisCartProduct.dom.price.innerHTML = thisCartProduct.price; // cena po prawej
       });
     }
 
@@ -543,14 +554,31 @@
       // console.log('thisApp.data:', thisApp.data);
 
       for (let productData in thisApp.data.products) {
-        new Product(productData, thisApp.data.products[productData]);
+        new Product(thisApp.data.products[productData].id, thisApp.data.products[productData]);
       }
     },
 
     initData: function() {
       const thisApp = this;
 
-      thisApp.data = dataSource;
+      thisApp.data = {};
+
+      const url = settings.db.url + '/' + settings.db.products;
+
+      fetch(url)
+        .then(function(rawResponse) {
+          return rawResponse.json();
+        })
+        .then(function(parsedResponse) {
+          console.log('parsedResponse', parsedResponse);
+
+          /* save parsedResponse as thisApp.data.products */
+          thisApp.data.products = parsedResponse;
+
+          /* execute initMenu method */
+          thisApp.initMenu();
+
+        });
     },
 
     init: function() {
@@ -562,7 +590,6 @@
       console.log('templates:', templates);
 
       thisApp.initData();
-      thisApp.initMenu();
       thisApp.initCart();
     },
 

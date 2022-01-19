@@ -107,7 +107,7 @@ class Product {
     let price = thisProduct.data.price;
     // console.log('data.params: ', thisProduct.data.params);
     // for every category (param)...
-    console.log(thisProduct.data.params);
+    // console.log(thisProduct.data.params);
     for(let paramId in thisProduct.data.params) {
       // determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... }
       const param = thisProduct.data.params[paramId];

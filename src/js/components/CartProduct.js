@@ -15,8 +15,8 @@ class CartProduct {
     thisCartProduct.getElements(element);
     thisCartProduct.initAmountWidget();
     thisCartProduct.initActions();
-    console.log('menuProduct', menuProduct);
-    console.log('thisCartProduct', thisCartProduct);
+    // console.log('menuProduct', menuProduct);
+    // console.log('thisCartProduct', thisCartProduct);
   }
 
   getElements(element) {
@@ -29,7 +29,7 @@ class CartProduct {
     thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
     thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
     thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
-    console.log(thisCartProduct.dom.amountWidget);
+    // console.log(thisCartProduct.dom.amountWidget);
   }
 
   initAmountWidget() {

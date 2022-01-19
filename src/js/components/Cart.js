@@ -11,7 +11,7 @@ class Cart {
     thisCart.getElements(element);
     thisCart.initActions();
 
-    console.log('all products', thisCart.products);
+    // console.log('all products', thisCart.products);
   }
 
   getElements(element) {
@@ -45,7 +45,7 @@ class Cart {
 
     thisCart.dom.productList.addEventListener('remove', function(){
       thisCart.remove(event.detail.cartProduct);
-      console.log('podany element', event.detail.cartProduct);
+      // console.log('podany element', event.detail.cartProduct);
     });
 
     thisCart.dom.form.addEventListener('submit', function(event) {
@@ -142,7 +142,7 @@ class Cart {
 
     fetch(url, options);
 
-    console.log(payload);
+    // console.log(payload);
   }
 }
 

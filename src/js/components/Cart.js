@@ -39,11 +39,11 @@ class Cart {
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
     });
 
-    thisCart.dom.productList.addEventListener('updated', function(){
+    thisCart.dom.productList.addEventListener('updated', function() {
       thisCart.update();
     });
 
-    thisCart.dom.productList.addEventListener('remove', function(){
+    thisCart.dom.productList.addEventListener('remove', function() {
       thisCart.remove(event.detail.cartProduct);
       // console.log('podany element', event.detail.cartProduct);
     });

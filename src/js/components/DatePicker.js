@@ -3,7 +3,7 @@ import utils from '../utils.js';
 import {select, settings} from '../settings.js';
 
 class DatePicker extends BaseWidget{
-  constructor(wrapper){
+  constructor(wrapper) {
     super(wrapper, utils.dateToStr(new Date()));
     const thisWidget = this;
 
@@ -11,7 +11,7 @@ class DatePicker extends BaseWidget{
     thisWidget.initPlugin();
   }
 
-  initPlugin(){
+  initPlugin() {
     const thisWidget = this;
 
     thisWidget.minDate = new Date();
@@ -35,15 +35,15 @@ class DatePicker extends BaseWidget{
     });
   }
 
-  parseValue(value){
+  parseValue(value) {
     return value;
   }
 
-  isValid(){
+  isValid() {
     return true;
   }
 
-  renderValue(){
+  renderValue() {
 
   }
 }

@@ -166,6 +166,7 @@ class Product {
     const thisProduct = this;
 
     thisProduct.amountWidget = new AmountWidget(thisProduct.amountWidgetElem);
+    console.log(thisProduct.amountWidget);
 
     thisProduct.amountWidgetElem.addEventListener('updated', function(){
       thisProduct.processOrder();

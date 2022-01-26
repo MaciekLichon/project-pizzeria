@@ -13,7 +13,7 @@ class Booking {
     thisBooking.render(element);
     thisBooking.initWidgets();
     thisBooking.getData();
-    console.log(thisBooking);
+    // console.log(thisBooking);
   }
 
   getData() {

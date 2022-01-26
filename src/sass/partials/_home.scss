@@ -1,12 +1,14 @@
 $font-header: 'Oswald', sans-serif;
 $font-text: 'Lato', sans-serif;
 
+
 .home-wrapper {
   padding: ($base-size * 3) 0;
 }
 
 .segment {
   padding: 40px 0;
+
   a {
     text-decoration: none;
     color: white;
@@ -33,6 +35,7 @@ $font-text: 'Lato', sans-serif;
     .element-image {
       height: 100%;
       width: 100%;
+
       img {
         height: 100%;
         width: 100%;
@@ -48,6 +51,7 @@ $font-text: 'Lato', sans-serif;
       left: 50%;
       transform: translate(-50%, -50%);
       transition: top 0.5s;
+
       h1 {
         font-family: $font-header;
         font-size: 26px;
@@ -62,11 +66,12 @@ $font-text: 'Lato', sans-serif;
     top: 30%;
   }
 
-/* SMALL BLOCK TRANSITION - stripe appears */
+  /* SMALL BLOCK TRANSITION - stripe appears */
 
   .small {
     overflow: hidden;
   }
+
   .small::after {
     position: absolute;
     content: '';
@@ -77,24 +82,28 @@ $font-text: 'Lato', sans-serif;
     bottom: 0;
     transition: 0.5s;
   }
+
   .small:hover::after {
     height: 20px;
     transform: scale(1,1);
   }
 
-/* BIG BLOCK TRANSITION - text underline */
+  /* BIG BLOCK TRANSITION - text underline */
 
   .big {
     background-color: $color-main;
+
     p, h1 {
       margin: 0;
     }
+
     .overlay {
       display: flex;
       justify-content: center;
       text-align: center;
       flex-direction: column;
     }
+
     .overlay::after {
       position: absolute;
       content: '';
@@ -107,6 +116,7 @@ $font-text: 'Lato', sans-serif;
       transition: 0.3s;
     }
   }
+
   .big:hover .overlay::after {
     transform: scale(1,1);
   }
@@ -122,12 +132,15 @@ $font-text: 'Lato', sans-serif;
     padding-top: 20px;
     bottom: 0;
   }
+
   button {
-     display: none;
+    display: none;
   }
+
   .flickity-viewport {
     height: 200px;
   }
+
   .carousel-cell {
     border-radius: 5px;
     counter-increment: gallery-cell;
@@ -135,22 +148,27 @@ $font-text: 'Lato', sans-serif;
     width: 100%;
     height: 100%;
     margin-right: 40px;
+
     .carousel-image {
       padding-right: 20px;
       flex: 50%;
+
       img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
       }
     }
+
     .carousel-text {
       padding-left: 20px;
       flex: 50%;
+
       p {
         text-align: justify;
       }
+
       span {
         font-weight: 700;
       }
@@ -180,6 +198,7 @@ $font-text: 'Lato', sans-serif;
     .gallery-image {
       height: 100%;
       width: 100%;
+
       img {
         height: 100%;
         width: 100%;
@@ -187,6 +206,7 @@ $font-text: 'Lato', sans-serif;
         border-radius: 10px;
       }
     }
+
     .options {
       position: absolute;
       height: 100%;
@@ -200,6 +220,7 @@ $font-text: 'Lato', sans-serif;
       align-items: center;
       justify-content: center;
       transition: opacity 0.7s;
+
       i {
         font-size: 26px;
         padding: 5px;
@@ -207,9 +228,11 @@ $font-text: 'Lato', sans-serif;
         transition: 0.5s;
       }
     }
+
     .options:hover {
       opacity: 1;
     }
+
     i:hover {
       color: $color-main;
       cursor: pointer;
